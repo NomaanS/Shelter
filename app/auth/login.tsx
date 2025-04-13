@@ -1,31 +1,64 @@
-// app/auth/login.tsx
-import React, { useState } from 'react';
-import { View, TextInput, Button, Text, Alert } from 'react-native';
-import { signIn } from '@utils/authService';
-import { useRouter } from 'expo-router';
+import React from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { Link } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import LoginForm from '../../src/components/auth/LoginForm';
 
 export default function LoginScreen() {
-  const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleLogin = async () => {
-    try {
-      await signIn(email, password);
-      router.replace('/');
-    } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
-    }
-  };
-
   return (
-    <View>
-      <Text>Email</Text>
-      <TextInput value={email} onChangeText={setEmail} autoCapitalize="none" />
-      <Text>Password</Text>
-      <TextInput value={password} onChangeText={setPassword} secureTextEntry />
-      <Button title="Login" onPress={handleLogin} />
-      <Text onPress={() => router.push('/auth/signup')}>Don't have an account? Sign up</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Welcome Back</Text>
+        <Text style={styles.subtitle}>Sign in to continue</Text>
+      </View>
+      
+      <LoginForm />
+      
+      <View style={styles.footer}>
+        <Text style={styles.footerText}>Don't have an account? </Text>
+        <Link href="/auth/signup" asChild>
+          <TouchableOpacity>
+            <Text style={styles.linkText}>Sign Up</Text>
+          </TouchableOpacity>
+        </Link>
+      </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  header: {
+    marginTop: 40,
+    marginBottom: 30,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+    padding: 20,
+  },
+  footerText: {
+    color: '#666',
+    fontSize: 16,
+  },
+  linkText: {
+    color: '#f4511e',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+}); 

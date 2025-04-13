@@ -1,29 +1,44 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Property } from '../../utils/types';
 
 interface PropertyMapProps {
-  latitude: number;
-  longitude: number;
-  title?: string;
+  property: Property;
+  style?: any;
 }
 
-const PropertyMap: React.FC<PropertyMapProps> = ({ latitude, longitude, title }) => {
+const PropertyMap: React.FC<PropertyMapProps> = ({ property, style }) => {
+  // Default to a position if lat/lng are not available
+  const latitude = property?.latitude || 0;
+  const longitude = property?.longitude || 0;
+
+  // Only render map if we have valid coordinates
+  if (!latitude || !longitude) {
+    return <View style={[styles.container, style]} />
+  }
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         initialRegion={{
           latitude,
           longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
         }}
+        showsUserLocation={false}
+        showsMyLocationButton={false}
+        toolbarEnabled={false}
       >
         <Marker
-          coordinate={{ latitude, longitude }}
-          title={title || 'Property Location'}
+          coordinate={{
+            latitude,
+            longitude,
+          }}
+          title={property.title}
         />
       </MapView>
     </View>
@@ -32,15 +47,13 @@ const PropertyMap: React.FC<PropertyMapProps> = ({ latitude, longitude, title })
 
 const styles = StyleSheet.create({
   container: {
-    height: 250,
-    width: '100%',
-    borderRadius: 10,
+    height: 200,
+    borderRadius: 8,
     overflow: 'hidden',
-    marginVertical: 16,
+    marginVertical: 10,
   },
   map: {
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
   },
 });
 

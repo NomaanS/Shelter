@@ -1,13 +1,14 @@
 import { 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
-  signOut,
-  onAuthStateChanged,
+  signOut as firebaseSignOut,
   User
 } from 'firebase/auth';
-import { auth } from '../utils/firebaseConfig';
+import { auth } from './firebaseConfig';
 
-// Sign up with email and password
+/**
+ * Signs up a user with email and password
+ */
 export const signUp = async (email: string, password: string): Promise<User> => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -19,7 +20,9 @@ export const signUp = async (email: string, password: string): Promise<User> => 
   }
 };
 
-// Sign in with email and password
+/**
+ * Signs in a user with email and password
+ */
 export const signIn = async (email: string, password: string): Promise<User> => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -31,30 +34,22 @@ export const signIn = async (email: string, password: string): Promise<User> => 
   }
 };
 
-// Aliases for backward compatibility
-export const signup = signUp;
-export const login = signIn;
-
-// Sign out
-export const logOut = async (): Promise<void> => {
+/**
+ * Signs out the current user
+ */
+export const signOut = async (): Promise<void> => {
   try {
-    await signOut(auth);
+    await firebaseSignOut(auth);
   } catch (error: any) {
     throw new Error('Failed to sign out');
   }
 };
 
-// Alias for backward compatibility
-export const logout = logOut;
-
-// Get current user
+/**
+ * Gets the current user
+ */
 export const getCurrentUser = (): User | null => {
   return auth.currentUser;
-};
-
-// Auth state observer
-export const onAuthStateChange = (callback: (user: User | null) => void) => {
-  return onAuthStateChanged(auth, callback);
 };
 
 /**
@@ -85,4 +80,4 @@ const getErrorMessage = (error: any): string => {
     default:
       return error.message || 'An unexpected error occurred. Please try again.';
   }
-};
+}; 

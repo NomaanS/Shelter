@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, StyleSheet, View, Text } from 'react-native';
-import type { Booking, Property } from '@config/types';
+import type { Booking, Property } from '../../utils/types';
 
 interface BookingListProps {
   bookings: Array<Booking & { property?: Property }>;

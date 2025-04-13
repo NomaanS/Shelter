@@ -15,21 +15,24 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "suppressIllegibleLoggingDuringCompilation": true,
+      "bundleIdentifier": "com.shelter.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.shelter.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "scheme": "shelter",
     "plugins": [
       "expo-router"
     ],
-    "scheme": "shelter",
     "newArchEnabled": true,
     "sdkVersion": "52.0.0"
   }

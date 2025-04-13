@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { router, useSegments } from 'expo-router';
 import { onAuthStateChanged, type User } from 'firebase/auth';
-import { auth } from '../../utils/firebaseInit';
+import { auth } from '../../utils/firebaseConfig';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PROTECTED_SEGMENTS = ['property/add', 'bookings'];
 
@@ -34,11 +35,19 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <SafeAreaView style={styles.container}>
         <ActivityIndicator size="large" color="#f4511e" />
-      </View>
+      </SafeAreaView>
     );
   }
 
   return <>{children}</>;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

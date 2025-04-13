@@ -1,54 +1,42 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from "react-native";
-import PropertyCard from "@components/properties/PropertyCard";
-import { getAllProperties } from "@services/propertyService";
-import { Property } from "@utils/types";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { Redirect } from "expo-router";
+import { auth } from "../src/utils/firebaseConfig";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const Home = () => {
-  const [properties, setProperties] = useState<Property[]>([]);
+export default function Index() {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
-    const getProperties = async () => {
-      const data = await getAllProperties();
-      setProperties(data);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       setLoading(false);
-    };
-    getProperties();
+    });
+    
+    return () => unsubscribe();
   }, []);
-
+  
   if (loading) {
     return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#000" />
-      </View>
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator size="large" color="#f4511e" />
+      </SafeAreaView>
     );
   }
-
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Available Properties</Text>
-      {properties.map((property: Property) => (
-        <PropertyCard key={property.id} property={property} />
-      ))}
-    </ScrollView>
-  );
-};
+  
+  if (user) {
+    return <Redirect href="/home" />;
+  } else {
+    return <Redirect href="/auth/login" />;
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-  },
-  loader: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
 });
-
-export default Home;

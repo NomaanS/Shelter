@@ -1,3 +1,17 @@
+import { NativeEventEmitter } from 'react-native';
+
+// Monkey patch the NativeEventEmitter to filter out topInsetsChange events
+const originalAddListener = NativeEventEmitter.prototype.addListener;
+NativeEventEmitter.prototype.addListener = function(eventType, listener, ...rest) {
+  if (eventType === 'topInsetsChange') {
+    // Return a dummy subscription that does nothing
+    return {
+      remove: () => {}
+    };
+  }
+  return originalAddListener.call(this, eventType, listener, ...rest);
+};
+
 export interface Property {
     id?: string;
     title: string;
@@ -24,4 +38,7 @@ export interface Property {
     time: string;
     message?: string;
   }
+  
+  // Export other types and utilities
+  export * from './module';
   
