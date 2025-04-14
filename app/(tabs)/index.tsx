@@ -1,74 +1,215 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import React, { useContext } from 'react';
+import { StyleSheet, View, ScrollView, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import { AuthContext } from '../_layout';
 
 export default function HomeScreen() {
+  const { user } = useContext(AuthContext);
+  const router = useRouter();
+  const screenWidth = Dimensions.get('window').width;
+
+  const featuredProperties = [
+    {
+      id: '1',
+      title: 'Luxury Beach House',
+      location: 'Malibu, CA',
+      price: '$250/night',
+      image: 'https://images.unsplash.com/photo-1577493340887-b7bfff550145?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400&q=80'
+    },
+    {
+      id: '2',
+      title: 'Mountain Cabin',
+      location: 'Aspen, CO',
+      price: '$180/night',
+      image: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&h=400&q=80'
+    },
+  ];
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <ThemedView style={styles.container}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Welcome Section */}
+        <View style={styles.welcomeSection}>
+          <ThemedText style={styles.welcomeTitle}>
+            Welcome{user ? `, ${user.displayName || 'Guest'}` : ''}!
+          </ThemedText>
+          <ThemedText style={styles.welcomeSubtitle}>
+            Find your perfect stay
+          </ThemedText>
+        </View>
+
+        {/* Featured Properties */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <ThemedText style={styles.sectionTitle}>Featured Properties</ThemedText>
+            <TouchableOpacity onPress={() => router.push('/properties')}>
+              <ThemedText style={styles.seeAllText}>See All</ThemedText>
+            </TouchableOpacity>
+          </View>
+
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.featuredListContainer}
+          >
+            {featuredProperties.map((property) => (
+              <TouchableOpacity 
+                key={property.id}
+                style={[styles.featuredItem, { width: screenWidth * 0.75 }]}
+                onPress={() => router.push(`/properties/${property.id}`)}
+              >
+                <Image 
+                  source={{ uri: property.image }} 
+                  style={styles.featuredImage} 
+                  resizeMode="cover"
+                />
+                <View style={styles.featuredInfo}>
+                  <ThemedText style={styles.featuredTitle}>{property.title}</ThemedText>
+                  <ThemedText style={styles.featuredLocation}>{property.location}</ThemedText>
+                  <ThemedText style={styles.featuredPrice}>{property.price}</ThemedText>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Quick Links */}
+        <View style={styles.section}>
+          <ThemedText style={styles.sectionTitle}>Quick Links</ThemedText>
+          <View style={styles.quickLinks}>
+            <TouchableOpacity 
+              style={styles.quickLinkItem}
+              onPress={() => router.push('/properties')}
+            >
+              <View style={styles.quickLinkIcon}>
+                <ThemedText style={styles.quickLinkIconText}>🏠</ThemedText>
+              </View>
+              <ThemedText style={styles.quickLinkText}>Properties</ThemedText>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={styles.quickLinkItem}
+              onPress={() => router.push('/bookings')}
+            >
+              <View style={styles.quickLinkIcon}>
+                <ThemedText style={styles.quickLinkIconText}>📅</ThemedText>
+              </View>
+              <ThemedText style={styles.quickLinkText}>Bookings</ThemedText>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={styles.quickLinkItem}
+              onPress={() => router.push('/explore')}
+            >
+              <View style={styles.quickLinkIcon}>
+                <ThemedText style={styles.quickLinkIconText}>🔍</ThemedText>
+              </View>
+              <ThemedText style={styles.quickLinkText}>Explore</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    padding: 20,
   },
-  stepContainer: {
-    gap: 8,
+  welcomeSection: {
+    marginBottom: 25,
+  },
+  welcomeTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  welcomeSubtitle: {
+    fontSize: 16,
+    opacity: 0.7,
+  },
+  section: {
+    marginBottom: 30,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  seeAllText: {
+    color: '#4a90e2',
+    fontWeight: '500',
+  },
+  featuredListContainer: {
+    paddingRight: 20,
+  },
+  featuredItem: {
+    marginRight: 15,
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: '#f5f5f5',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  featuredImage: {
+    width: '100%',
+    height: 180,
+  },
+  featuredInfo: {
+    padding: 15,
+  },
+  featuredTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  featuredLocation: {
+    fontSize: 14,
+    opacity: 0.7,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  featuredPrice: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#4a90e2',
+  },
+  quickLinks: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  quickLinkItem: {
+    alignItems: 'center',
+    width: '30%',
+  },
+  quickLinkIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  quickLinkIconText: {
+    fontSize: 24,
+  },
+  quickLinkText: {
+    fontSize: 14,
+    fontWeight: '500',
   },
 });

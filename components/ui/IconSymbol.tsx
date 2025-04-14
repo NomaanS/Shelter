@@ -1,43 +1,38 @@
-// This file is a fallback for using MaterialIcons on Android and web.
-
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { SymbolWeight } from 'expo-symbols';
 import React from 'react';
-import { OpaqueColorValue, StyleProp, ViewStyle } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-// Add your SFSymbol to MaterialIcons mappings here.
-const MAPPING = {
-  // See MaterialIcons here: https://icons.expo.fyi
-  // See SF Symbols in the SF Symbols app on Mac.
-  'house.fill': 'home',
-  'paperplane.fill': 'send',
-  'chevron.left.forwardslash.chevron.right': 'code',
-  'chevron.right': 'chevron-right',
-} as Partial<
-  Record<
-    import('expo-symbols').SymbolViewProps['name'],
-    React.ComponentProps<typeof MaterialIcons>['name']
-  >
->;
+type IconProps = {
+  name: string;
+  size: number;
+  color: string;
+};
 
-export type IconSymbolName = keyof typeof MAPPING;
+// Default implementation for Android and web using Ionicons
+export function IconSymbol({ name, size, color }: IconProps) {
+  // Map SF Symbol names to Ionicons names
+  const iconMap: { [key: string]: string } = {
+    'house.fill': 'home',
+    'paperplane.fill': 'paper-plane',
+    'building.2.fill': 'business',
+    'calendar': 'calendar',
+    'person.fill': 'person',
+    'gear': 'settings',
+    'bell.fill': 'notifications',
+    'magnifyingglass': 'search',
+    'checkmark.circle.fill': 'checkmark-circle',
+    'xmark.circle.fill': 'close-circle',
+    'plus.circle.fill': 'add-circle',
+    'minus.circle.fill': 'remove-circle',
+    'heart.fill': 'heart',
+    'heart': 'heart-outline',
+    'star.fill': 'star',
+    'star': 'star-outline',
+    'bookmark.fill': 'bookmark',
+    'bookmark': 'bookmark-outline'
+  };
 
-/**
- * An icon component that uses native SFSymbols on iOS, and MaterialIcons on Android and web. This ensures a consistent look across platforms, and optimal resource usage.
- *
- * Icon `name`s are based on SFSymbols and require manual mapping to MaterialIcons.
- */
-export function IconSymbol({
-  name,
-  size = 24,
-  color,
-  style,
-}: {
-  name: IconSymbolName;
-  size?: number;
-  color: string | OpaqueColorValue;
-  style?: StyleProp<ViewStyle>;
-  weight?: SymbolWeight;
-}) {
-  return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
-}
+  // Convert SF Symbol name to Ionicons name or use original if not in map
+  const ioniconsName = iconMap[name] || name;
+
+  return <Ionicons name={ioniconsName as any} size={size} color={color} />;
+} 
