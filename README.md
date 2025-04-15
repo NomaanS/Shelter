@@ -1,4 +1,59 @@
-.
+# 🏡 Shelter – Real Estate Mobile App
+
+**Shelter** is a cross-platform mobile application built with **Expo (React Native + TypeScript)** that allows users to browse property listings, view detailed information, and book viewings. It integrates with **Firebase** for authentication and Firestore data storage, and uses **Google Maps** for property location viewing.
+
+---
+
+## 🚀 Features
+
+- 🔐 **User Authentication** with Firebase (Sign Up / Login)
+- 🏘️ **View All Properties** in a tab-based layout
+- 📋 **View Property Details** (images, price, description, etc.)
+- 📅 **Book Property Viewings** via Firestore
+- 📍 **Google Maps Integration** to view property locations
+- 📱 **Responsive Design** for both mobile and tablet devices
+
+---
+
+## 📦 Tech Stack
+
+- [Expo](https://expo.dev/)
+- [React Native](https://reactnative.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Firebase](https://firebase.google.com/) (Auth + Firestore)
+- [React Navigation](https://reactnavigation.org/)
+- [React Native Maps](https://github.com/react-native-maps/react-native-maps)
+
+---
+
+## 🧑‍💻 How to Run This App Locally
+
+### 📌 Prerequisites
+
+- [Node.js (LTS)](https://nodejs.org/)
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- [Git](https://git-scm.com/)
+- A Firebase Project with:
+  - Authentication enabled (Email/Password)
+  - Firestore database set up
+
+---
+
+### 🛠️ Installation Steps
+
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/shelter.git
+
+# Navigate to the project directory
+cd shelter
+
+# Install dependencies
+npm install
+
+# Start Expo development server
+npx expo start
+
 ├── README.md
 ├── app
 │   ├── (tabs)
